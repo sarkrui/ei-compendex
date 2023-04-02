@@ -50,9 +50,8 @@ jobs:
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-          TAG_NAME: ${{ format('release-{0}', env.DATE) }}
         with:
-          tag_name: ${{ env.TAG_NAME }}
-          release_name: ${{ env.TAG_NAME }}
+          tag_name: ${{ github.run_id }}
+          release_name: Release ${{ github.run_id }}
           draft: false
           prerelease: false
