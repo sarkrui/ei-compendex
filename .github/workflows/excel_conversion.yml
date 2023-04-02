@@ -57,11 +57,22 @@ jobs:
           prerelease: false
 
       - name: Upload Release Assets
-        uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: '*.csv,*.html'
-          asset_name: ${{ github.run_number }}-${{ github.run_id }}-${{ matrix.os }}
-          asset_content_type: application/octet-stream
+        run: |
+          for file in *.csv *.html; do
+            echo "Uploading $file"
+            asset_name="$(date +'%Y-%m-%d')-$file"
+            content_type="application/octet-stream"
+            if [[ $file == *.html ]]; then
+              content_type="text/html"
+            fi
+            curl \
+              --progress-bar \
+              --location \
+              --request POST \
+              --header "Authorization: Bearer $GITHUB_TOKEN" \
+              --header "Content-Type: $content_type" \
+              --upload-file $file \
+              "${{ steps.create_release.outputs.upload_url }}?name=$asset_name"
+          done
