@@ -1,9 +1,9 @@
 name: Excel to CSV and HTML Conversion
 
 on:
-  push:
-    branches:
-      - main
+  schedule:
+    - cron: '0 0 * * *' # Runs once a day at 00:00 UTC
+  workflow_dispatch: # Add this line to allow manual triggering 
 
 jobs:
   excel_conversion:
