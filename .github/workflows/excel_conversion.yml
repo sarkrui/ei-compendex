@@ -50,29 +50,9 @@ jobs:
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          TAG_NAME: ${{ format('release-{0}', env.DATE) }}
         with:
-          tag_name: ${{ github.run_id }}
-          release_name: Release ${{ github.run_id }}
+          tag_name: ${{ env.TAG_NAME }}
+          release_name: ${{ env.TAG_NAME }}
           draft: false
           prerelease: false
-
-      - name: Upload Release Assets
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-        run: |
-          for file in *.csv *.html; do
-            echo "Uploading $file"
-            asset_name="$(date +'%Y-%m-%d')-$file"
-            content_type="application/octet-stream"
-            if [[ $file == *.html ]]; then
-              content_type="text/html"
-            fi
-            curl \
-              --progress-bar \
-              --location \
-              --request POST \
-              --header "Authorization: Bearer $GITHUB_TOKEN" \
-              --header "Content-Type: $content_type" \
-              --upload-file $file \
-              "${{ steps.create_release.outputs.upload_url }}?name=$asset_name"
-          done
