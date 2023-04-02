@@ -23,15 +23,10 @@ jobs:
           pip install pandas openpyxl lxml selenium
 
       - name: Install Chrome
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y wget unzip
-          wget https://chromedriver.storage.googleapis.com/94.0.4606.61/chromedriver_linux64.zip
-          unzip chromedriver_linux64.zip
-          sudo mv chromedriver /usr/bin/chromedriver
-          sudo chown root:root /usr/bin/chromedriver
-          sudo chmod +x /usr/bin/chromedriver
-
+        uses: browser-actions/setup-chrome@latest
+        with:
+          chrome-version: stable
+          
       - name: Run Python script
         run: python main.py
 
